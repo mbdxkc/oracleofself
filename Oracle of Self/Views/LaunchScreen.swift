@@ -4,18 +4,20 @@
 //
 //  Two-phase animated splash:
 //    1. mediaBrilliance logo on black (~0.6 s hold, 0.6 s cross-fade)
-//    2. Oracle of Self logo on white, large (0.7 s fade in, 1.0 s hold, 0.8 s fade out)
+//    2. Oracle of Self logo on icon-bg gray, large (0.7 s fade in, 1.7 s hold, 0.8 s fade out)
 //    3. .complete (overlay removed by parent)
 //
 
 import SwiftUI
+
+private let iconBackground = Color(red: 242/255, green: 242/255, blue: 242/255)
 
 struct LaunchScreen: View {
 
     @Binding var phase: LaunchPhase
 
     @State private var blackOpacity: Double = 1.0
-    @State private var whiteOpacity: Double = 0.0
+    @State private var iconBgOpacity: Double = 0.0
     @State private var mbOpacity: Double = 1.0
     @State private var oracleOpacity: Double = 0.0
 
@@ -28,8 +30,8 @@ struct LaunchScreen: View {
                     .opacity(blackOpacity)
                     .ignoresSafeArea()
 
-                Color.white
-                    .opacity(whiteOpacity)
+                iconBackground
+                    .opacity(iconBgOpacity)
                     .ignoresSafeArea()
 
                 Image("mb_logo")
@@ -59,11 +61,11 @@ struct LaunchScreen: View {
             try? await Task.sleep(nanoseconds: 600_000_000)
             guard !Task.isCancelled else { return }
 
-            // Cross-fade: mb out, black → white
+            // Cross-fade: mb out, black → icon bg
             withAnimation(.easeInOut(duration: 0.6)) {
                 mbOpacity = 0.0
                 blackOpacity = 0.0
-                whiteOpacity = 1.0
+                iconBgOpacity = 1.0
             }
 
             try? await Task.sleep(nanoseconds: 500_000_000)
@@ -77,10 +79,10 @@ struct LaunchScreen: View {
             try? await Task.sleep(nanoseconds: 1_700_000_000)
             guard !Task.isCancelled else { return }
 
-            // Fade out logo + white bg, revealing the app
+            // Fade out logo + icon bg, revealing the app
             withAnimation(.easeOut(duration: 0.8)) {
                 oracleOpacity = 0.0
-                whiteOpacity = 0.0
+                iconBgOpacity = 0.0
             }
 
             try? await Task.sleep(nanoseconds: 800_000_000)

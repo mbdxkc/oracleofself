@@ -47,6 +47,8 @@ struct InsightsView: View {
             ZStack {
                 Color.black.ignoresSafeArea()
 
+                LogoWatermark(opacity: 0.05)
+
                 if diary.isEmpty {
                     emptyState
                 } else {
@@ -94,7 +96,7 @@ struct InsightsView: View {
         List {
             ForEach(diary.topLevelEntries) { entry in
                 EntryRow(entry: entry, diary: diary, onTryAgain: onTryAgain, onComment: { selectedEntry = entry })
-                    .listRowBackground(Color.black)
+                    .listRowBackground(Color.clear)
                     .listRowSeparator(.hidden)
                     .listRowInsets(EdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16))
                     .contentShape(Rectangle())
@@ -104,7 +106,7 @@ struct InsightsView: View {
             }
         }
         .listStyle(.plain)
-        .background(Color.black)
+        .scrollContentBackground(.hidden)
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Button {

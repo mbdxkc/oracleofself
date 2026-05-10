@@ -27,6 +27,8 @@ struct OracleView: View {
         ZStack {
             Color.black.ignoresSafeArea()
 
+            LogoWatermark(opacity: 0.05)
+
             MysticalFogView()
                 .ignoresSafeArea()
                 .zIndex(0)

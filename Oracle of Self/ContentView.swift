@@ -9,18 +9,18 @@ import SwiftUI
 
 struct ContentView: View {
     @State private var controller = OracleController()
-    @State private var history = HistoryController()
+    @State private var diary = DiaryController()
     @State private var selectedTab = 0
 
     var body: some View {
         TabView(selection: $selectedTab) {
-            OracleView(controller: controller, history: history)
+            OracleView(controller: controller, diary: diary)
                 .tabItem {
                     Label("Oracle", systemImage: "sparkles")
                 }
                 .tag(0)
 
-            HistoryView(history: history, onTryAgain: tryAgain)
+            InsightsView(diary: diary, onTryAgain: tryAgain)
                 .tabItem {
                     Label("Insights", systemImage: "book.closed")
                 }

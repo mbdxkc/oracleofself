@@ -111,4 +111,17 @@ final class OracleController {
         question = ""
         state = .prompt
     }
+
+    // MARK: - Programmatic Consultation
+
+    /// Runs a full oracle session in the background and returns the outcome
+    /// string. Used when the user asks the oracle from within a diary thread.
+    static func consult(question: String) -> String {
+        let c = OracleController()
+        c.start(question: question)
+        while case .asking = c.state {
+            c.answer(Bool.random())
+        }
+        return c.outcomeText
+    }
 }

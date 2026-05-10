@@ -21,7 +21,7 @@ import SwiftUI
 /// Black background with the fog overlay.
 struct OracleView: View {
     let controller: OracleController
-    let history: HistoryController
+    let diary: DiaryController
 
     var body: some View {
         ZStack {
@@ -39,7 +39,7 @@ struct OracleView: View {
                 QuestionView(controller: controller)
                     .zIndex(1)
             case .result:
-                ResultView(controller: controller, history: history)
+                ResultView(controller: controller, diary: diary)
                     .zIndex(1)
             }
         }
@@ -241,7 +241,7 @@ struct QuestionView: View {
 /// local history via `HistoryController`.
 struct ResultView: View {
     let controller: OracleController
-    let history: HistoryController
+    let diary: DiaryController
 
     var body: some View {
         OracleContentLayout(
@@ -279,7 +279,7 @@ struct ResultView: View {
                                 .background(Color.accent)
                                 .clipShape(RoundedRectangle(cornerRadius: 18))
                         }
-                        .accessibilityLabel("Save this oracle reading to history")
+                        .accessibilityLabel("Save this oracle reading to diary")
 
                         Button(action: { controller.reset() }) {
                             Text("No")
@@ -299,7 +299,7 @@ struct ResultView: View {
 
     private func saveAndReset() {
         if case .result(let finalScore) = controller.state {
-            history.add(
+            diary.addOracle(
                 question: controller.question,
                 outcome: controller.outcomeText,
                 score: finalScore
@@ -312,5 +312,5 @@ struct ResultView: View {
 // MARK: - Preview
 
 #Preview {
-    OracleView(controller: OracleController(), history: HistoryController())
+    OracleView(controller: OracleController(), diary: DiaryController())
 }

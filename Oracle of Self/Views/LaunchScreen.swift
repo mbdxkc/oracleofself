@@ -3,9 +3,12 @@
 //  Oracle of Self
 //
 //  Two-phase animated splash:
-//    1. mediaBrilliance logo on black (~0.6 s hold, 0.6 s cross-fade)
-//    2. Oracle of Self logo on icon-bg gray, large (0.7 s fade in, 1.7 s hold, 0.8 s fade out)
+//    1. mediaBrilliance logo on black (~0.8 s hold, 0.6 s cross-fade)
+//    2. Oracle of Self logo on icon-bg gray (1.8 s slow fade-in to 0.5 opacity,
+//       1.0 s hold, 1.0 s fade out into the app)
 //    3. .complete (overlay removed by parent)
+//
+//  Total ~5.7 s gives the rest of the app time to settle before reveal.
 //
 
 import SwiftUI
@@ -58,7 +61,7 @@ struct LaunchScreen: View {
         animationTask?.cancel()
         animationTask = Task {
             // Hold mb logo on black
-            try? await Task.sleep(nanoseconds: 600_000_000)
+            try? await Task.sleep(nanoseconds: 800_000_000)
             guard !Task.isCancelled else { return }
 
             // Cross-fade: mb out, black → icon bg
@@ -72,20 +75,20 @@ struct LaunchScreen: View {
             guard !Task.isCancelled else { return }
             phase = .oracleSplash
 
-            // Fade in Oracle logo
-            withAnimation(.easeIn(duration: 0.7)) { oracleOpacity = 1.0 }
+            // Slow fade-in of Oracle logo to half-opacity (ghostly, not full)
+            withAnimation(.easeIn(duration: 1.8)) { oracleOpacity = 0.5 }
 
-            // Hold the beautiful pose
-            try? await Task.sleep(nanoseconds: 1_700_000_000)
+            // Hold the half-opacity pose; gives the app behind time to settle
+            try? await Task.sleep(nanoseconds: 2_800_000_000)
             guard !Task.isCancelled else { return }
 
-            // Fade out logo + icon bg, revealing the app
-            withAnimation(.easeOut(duration: 0.8)) {
+            // Fade logo + icon bg out, revealing the app
+            withAnimation(.easeOut(duration: 1.0)) {
                 oracleOpacity = 0.0
                 iconBgOpacity = 0.0
             }
 
-            try? await Task.sleep(nanoseconds: 800_000_000)
+            try? await Task.sleep(nanoseconds: 1_000_000_000)
             guard !Task.isCancelled else { return }
             phase = .complete
         }
